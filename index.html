@@ -21,6 +21,11 @@
 
         }
 
+        a {
+            color: black;
+            text-decoration: none;
+        }
+
         .video,
         .audio {
             border: 1px solid rgb(185, 181, 181);
@@ -41,9 +46,17 @@
                         <h4 class="card-title">Audio</h4>
                         <p class="card-text">Seleziona un brano in elenco per ascoltare la musica.</p>
                         <div class="row">
-                            <ul id="musica" class="list-group col-6">
-                            </ul>
-                            <audio id="audio" controls class="col-6"></audio>
+                            <div class="col-lg-6 d-flex justify-content-between mb-2 p-3">
+                                <div class="card">
+                                    <ul id="musica1" class="list-group list-group-flush">
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 d-flex justify-content-between mb-2 p-3">
+                                <audio id="mymusic" width="100%" controls>
+
+                                </audio>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -54,12 +67,20 @@
                         <h4 class="card-title">Video</h4>
                         <p class="card-text">Seleziona un video in elenco per visualizzarlo.</p>
                         <div class="row">
-                            <ul id="video1" class="list-group col-6">
-                            </ul>
-                            <div class="col-6">
-                                <video height="100%" width="100%" controls></video>
+                            <div class="col-lg-6 d-flex justify-content-between mb-2 p-3">
+                                <div class="card">
+                                    <ul id="video1" class="list-group list-group-flush">
+
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 d-flex justify-content-between mb-2 p-3">
+                                <video id="myvideo" width="100%" controls>
+
+                                </video>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -77,49 +98,49 @@
                 success: function (data) {
                     $.each(data.audio, function (i, el) {
                         var song = el.title;
-                        var file = el.file;
-                        $("#musica").append("<li class='list-group-item'><a>" + song + "</a></li>");
+                        var file_audio = el.file;
+                        $("#musica1").append("<li class='list-group-item'><a href='assets/audio/" + file_audio + "'>" + song + "</a></li>");
 
-                        $('#musica a').click(function (e) {
+                        $('#musica1 a').click(function (e){
                             e.preventDefault();
-                            var music = $(this).attr('href');
-                            var myAudio = $('#musica');
-                            myAudio.attr('src', music);
-                            document.getElementById("audio").play();
-
-                        });
-                        console.log(data.audio);
-                    })
+                            var music = $(this).attr("href");
+                            var myMusic = $('#mymusic');
+                            myMusic.attr('src', music);
+                            document.getElementById("mymusic").play();
+                        })
+                    });
+                },
+                error: function (error) {
+                    console.log(error.status);
                 }
-            });
+            }),
 
-        })
 
-        $.ajax({
-            url: "data/video.json",
-            type: "GET",
-            dataType: "json",
-            success: function (data) {
-                $.each(data.video, function (i, el) {
-                    var video = el.title;
-                    var file = el.file;
-                    $("#video1").append("<li class='list-group-item'><a>" + video + "</a></li>");
+            $.ajax({
+                url: "data/video.json",
+                type: "GET",
+                dataType: "json",
+                success: function (data) {
+                    $.each(data.video, function (i, el) {
+                        var video = el.title;
+                        var file_video = el.file;
+                        $("#video1").append("<li class='list-group-item'><a href='assets/video/" + file_video + "'>" + video + "</a></li>");
 
-                    $('#video1 a').click(function (e) {
-                        e.preventDefault();
-                        var media = $(this).attr('href');
-                        var myVideo = $('#video');
-                        myVideo.attr('src', media);
-                        document.getElementById("video").play();
-                    })
-
-                });
-                console.log(data.video);
-            }
+                        $('#video1 a').click(function (e) {
+                            e.preventDefault();
+                            var media = $(this).attr("href");
+                            var myVideo = $('#myvideo');
+                            myVideo.attr('src', media);
+                            document.getElementById("myvideo").play();
+                        })
+                    });
+                },
+                error: function (error) {
+                    console.log(error.status);
+                }
+            })
         });
-        
 
-        
 
 
 
