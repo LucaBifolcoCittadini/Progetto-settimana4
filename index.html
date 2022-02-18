@@ -41,9 +41,9 @@
                         <h4 class="card-title">Audio</h4>
                         <p class="card-text">Seleziona un brano in elenco per ascoltare la musica.</p>
                         <div class="row">
-                            <ul id="musica" class="list-group col-6"> <li class='list-group-item' onclick="playSong">Heart Beat</li> <li class='list-group-item' onclick="playSong">Honky Tonky Piano</li> <li class='list-group-item' onclick="playSong">Mastermind</li>
+                            <ul id="musica" class="list-group col-6">
                             </ul>
-                            <audio controls class="col-6"></audio>
+                            <audio id="audio" controls class="col-6"></audio>
                         </div>
                     </div>
                 </div>
@@ -55,8 +55,6 @@
                         <p class="card-text">Seleziona un video in elenco per visualizzarlo.</p>
                         <div class="row">
                             <ul id="video1" class="list-group col-6">
-                                <li class='list-group-item' onclick='playVideo'>Sea By Night</li>
-                                <li class='list-group-item' onclick='playVideo'>Flight</li> <li class='list-group-item' onclick='playVideo'>Sea</li>
                             </ul>
                             <div class="col-6">
                                 <video height="100%" width="100%" controls></video>
@@ -77,31 +75,51 @@
                 type: "GET",
                 dataType: "json",
                 success: function (data) {
-                    $.each(data, function (i, el) {
-                        let song = el.name;
-                        console.log(song);
-                        $(".audio").append("<li class='list-group-item' onclick= 'playSong'>" + song + "</li>");
-                    });
-                    console.log(data);
+                    $.each(data.audio, function (i, el) {
+                        var song = el.title;
+                        var file = el.file;
+                        $("#musica").append("<li class='list-group-item'><a>" + song + "</a></li>");
+
+                        $('#musica a').click(function (e) {
+                            e.preventDefault();
+                            var music = $(this).attr('href');
+                            var myAudio = $('#musica');
+                            myAudio.attr('src', music);
+                            document.getElementById("audio").play();
+
+                        });
+                        console.log(data.audio);
+                    })
                 }
             });
-        })
-        $(document)
-            .ready(function () {
-                $.ajax({
-                    url: "data/video.json",
-                    type: "GET",
-                    dataType: "json",
-                    success: function (data) {
-                        $.each(data, function (i, el) {
-                            var video = el.name;
-                            $(".video").append("<li class='list-group-item' onclick='playVideo'>" + song + "</li>");
-                        });
-                        console.log(data);
-                    }
-                });
 
-            })
+        })
+
+        $.ajax({
+            url: "data/video.json",
+            type: "GET",
+            dataType: "json",
+            success: function (data) {
+                $.each(data.video, function (i, el) {
+                    var video = el.title;
+                    var file = el.file;
+                    $("#video1").append("<li class='list-group-item'><a>" + video + "</a></li>");
+
+                    $('#video1 a').click(function (e) {
+                        e.preventDefault();
+                        var media = $(this).attr('href');
+                        var myVideo = $('#video');
+                        myVideo.attr('src', media);
+                        document.getElementById("video").play();
+                    })
+
+                });
+                console.log(data.video);
+            }
+        });
+        
+
+        
 
 
 
